@@ -9,25 +9,26 @@ import (
 )
 
 type JwtService interface {
-	GenerateToken(user models.User, roles []string) (string, error)
+	GenerateToken(user models.User, role models.Role) (string, error)
 }
 
-type jwtService struct{}
+type jwtCustomService struct{}
 
 func NewJwtService() JwtService {
-	return &jwtService{}
+	return &jwtCustomService{}
 }
 
-func (s *jwtService) GenerateToken(user models.User, roles []string) (string, error) {
+func (s *jwtCustomService) GenerateToken(user models.User, role models.Role) (string, error) {
 	claims := jwt.MapClaims{
-		"sub":   user.ID,
+		"sub":   user.ID.String(),
 		"name":  user.Name,
 		"email": user.Email,
-		"roles": roles,
+		"role":  role.Name,
+		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 		"iss":   config.Cfg.JwtOptions.Issuer,
 		"aud":   config.Cfg.JwtOptions.Audience,
-		"exp":   time.Now().AddDate(0, 0, 7).Unix(),
 	}
-	tkn := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return tkn.SignedString([]byte(config.Cfg.JwtOptions.Secret))
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(config.Cfg.JwtOptions.Secret))
 }

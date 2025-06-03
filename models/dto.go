@@ -24,6 +24,7 @@ type UserDto struct {
 	Email       string    `json:"email"`
 	Name        string    `json:"name"`
 	PhoneNumber string    `json:"phoneNumber"`
+	Role        Role      `json:"role"`
 }
 
 type LoginResponseDto struct {

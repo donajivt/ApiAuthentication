@@ -22,10 +22,10 @@ func (c *AuthController) Register(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, models.ResponseDto{IsSuccess: false, Message: err.Error()})
 		return
 	}
-	if msg, err := c.service.Register(req); err != nil {
-		ctx.JSON(http.StatusBadRequest, models.ResponseDto{IsSuccess: false, Message: msg})
+	if id, err := c.service.Register(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, models.ResponseDto{IsSuccess: false, Message: err.Error()})
 	} else {
-		ctx.JSON(http.StatusOK, models.ResponseDto{IsSuccess: true})
+		ctx.JSON(http.StatusOK, models.ResponseDto{IsSuccess: true, Result: id})
 	}
 }
 
