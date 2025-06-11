@@ -48,13 +48,13 @@ func RequireRoles(allowedRoles ...string) gin.HandlerFunc {
 			return
 		}
 
-		userRoles, ok := claims["roles"].([]interface{})
+		userRole, ok := claims["role"].([]interface{})
 		if !ok {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "no roles found in token"})
 			return
 		}
 
-		for _, role := range userRoles {
+		for _, role := range userRole {
 			for _, allowed := range allowedRoles {
 				if role.(string) == allowed {
 					c.Next()
